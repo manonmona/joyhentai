@@ -6,7 +6,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author manonmona
@@ -55,7 +58,43 @@ public class AnalyseBooksTest {
 //        System.out.println(books);
 //        System.out.println(books);
 //        System.out.println(books);
-        cacheBooks();
+//        cacheBooks();
+        cacheBooksDetail();
+    }
+
+    public static void cacheBooksDetail(){
+        String host = "https://zh.joyhentai.fun/";
+        BooksService booksService = new BooksServiceImpl();
+        List<Books> booksList = booksService.loadAllBooks();
+        final List<Books> booksDetail = new ArrayList<>();
+        //获取CPU数量
+        int processors = Runtime.getRuntime().availableProcessors();
+        // 创建cpu个数+1个线程
+        ExecutorService pool = Executors.newFixedThreadPool(processors+2);
+        for (int i = 0; i < booksList.size(); i++) {
+            final int index = i;
+            pool.execute(() -> {
+                try {
+                    Books books = JoyHentaiBooksAnalyse.analyseBooksDetail(host , booksList.get(index));
+                    booksDetail.add(books);
+                    if(booksDetail.size()==10){
+                        boolean b = booksService.updateBooksDetails(booksDetail);
+                        booksDetail.clear();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    booksService.updateBooksDetails(booksDetail);
+                }
+            });
+        }
+
+        pool.shutdown();
+        while (true){
+            if(pool.isTerminated()){
+                booksService.updateBooksDetails(booksDetail);
+                return;
+            }
+        }
     }
 
 

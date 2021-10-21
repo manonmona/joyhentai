@@ -27,7 +27,9 @@
     <foreach collection="booksPages" item="item" index="index" open="" close="" separator=";">
       update books_pages
         <set>
-          status = #{item.status,jdbcType=INTEGER}
+          status = #{item.status,jdbcType=INTEGER},
+          suffix = #{item.suffix,jdbcType=VARCHAR},
+          url = #{item.url,jdbcType=VARCHAR}
         </set>
       where id = #{item.id,jdbcType=INTEGER}
     </foreach>

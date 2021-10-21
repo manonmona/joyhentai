@@ -8,6 +8,13 @@ import java.util.List;
 public interface BooksMapper {
 
     /**
+     * 修改本子详细信息
+     * @param booksList
+     * @return
+     */
+    int updateBooksDetails(@Param("books") List<Books> booksList);
+
+    /**
      * 未下载完成的本子集合
      * @return
      */

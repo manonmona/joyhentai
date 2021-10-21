@@ -59,4 +59,11 @@ public interface BooksService {
      * @return
      */
     List<Books> getNotDownSuccessBooks();
+
+    /**
+     * 修改本子详细信息
+     * @param books
+     * @return
+     */
+    boolean updateBooksDetails(List<Books> books);
 }

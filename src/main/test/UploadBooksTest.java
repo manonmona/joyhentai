@@ -41,7 +41,7 @@ public class UploadBooksTest {
 //        booksPagesService.updateBooksPageStatus(pagesList);
 
 //        upload();
-//        threadPoolUpload();
+        threadPoolUpload();
     }
 
     public static void threadPoolUpload(){
@@ -88,12 +88,24 @@ public class UploadBooksTest {
                     for (int j = 0; j < fn_pagesList.size(); j++) {
                         try {
                             // 下载图片
-                            download(fn_pagesList,j,pathName);
+                            boolean result = download(fn_pagesList, j, pathName);
+                            if(!result){
+                                String suffix = fn_pagesList.get(j).getSuffix();
+                                String url = fn_pagesList.get(j).getUrl();
+                                if(suffix.equals(".png")){
+                                    fn_pagesList.get(j).setSuffix(".jpg");
+                                    fn_pagesList.get(j).setUrl(url.replace(".png",".jpg"));
+                                }else if(suffix.equals(".jpg")){
+                                    fn_pagesList.get(j).setSuffix(".png");
+                                    fn_pagesList.get(j).setUrl(url.replace(".jpg",".png"));
+                                }
+                                download(fn_pagesList, j, pathName);
+                            }
                         } catch (Exception e) {
 //                            e.printStackTrace();
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String dateTime = dateFormat.format(new Date());
-                            System.out.println(e.getMessage()+"："+fn_pagesList.get(j).getId()+"   ----->"+dateTime);
+                            System.out.println(e.getMessage()+"：["+books.getId()+"]"+dirName+"\t"+fn_pagesList.get(j).getName()+"页下载失败   ----->"+dateTime);
 //                            booksList.get(index).setStatus(2);
 //                            booksService.updateBooksStatus(booksList.get(index));
 
@@ -129,6 +141,7 @@ public class UploadBooksTest {
                 suo =false;
             }
         }
+//        threadPoolUpload();
     }
 
     /**
@@ -224,7 +237,7 @@ public class UploadBooksTest {
      * @param imagePathFile
      * @throws Exception
      */
-    public static void download(List<BooksPages> booksPagesList,Integer index , String imagePathFile)throws Exception {
+    public static boolean download(List<BooksPages> booksPagesList,Integer index , String imagePathFile)throws Exception {
         BooksPages booksPages = booksPagesList.get(index);
         // 1.创建URL
         URL url = new URL(booksPages.getUrl());
@@ -232,7 +245,7 @@ public class UploadBooksTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         // 3.设置超时时间，访问方式postget，伪装浏览器
         conn.setConnectTimeout(5000);
-        conn.setReadTimeout(10000);
+        conn.setReadTimeout(5000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("accept", "*/*");
         conn.setRequestProperty("user-agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36");
@@ -240,7 +253,7 @@ public class UploadBooksTest {
         if(conn.getResponseCode()!=200 && conn.getResponseCode()!=301){
 //            System.out.println(conn.getResponseCode()+"连接退出");
             booksPagesList.get(index).setStatus(2);
-            return ;
+            return false;
         }
         //通过输入流获取图片数据
         InputStream inStream = conn.getInputStream();
@@ -256,6 +269,7 @@ public class UploadBooksTest {
         outStream.close();
         //设置下载状态为完成
         booksPagesList.get(index).setStatus(1);
+        return true;
     }
 
     /**

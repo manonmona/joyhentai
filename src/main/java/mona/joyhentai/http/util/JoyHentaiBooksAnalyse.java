@@ -36,6 +36,60 @@ public class JoyHentaiBooksAnalyse {
         }
     }
 
+    public static Books analyseBooksDetail(String host , Books books) throws IOException {
+        Document doc;
+        /*try {*/
+            doc = Jsoup.connect(host+books.getSrc()).get();
+            Elements aClass = doc.getElementsByClass("detail-box");
+            for (Element ele:aClass) {
+
+
+                Elements tag = ele.getElementsByClass("tag-icon");
+                Elements writer = ele.getElementsByClass("circle-icon");
+                Elements language = ele.getElementsByClass("language-icon");
+                Elements day = ele.getElementsByClass("upload-day-icon");
+                // 标签
+                if(tag.size()!=0){
+                    Elements as = ele.getElementsByTag("a");
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < as.size(); i++) {
+                        sb.append(as.get(i).text());
+                        if(i<as.size()-1){
+                            sb.append(",");
+                        }
+                    }
+                    books.setTag(sb.toString());
+                }else if(writer.size()!=0){
+                    Elements as = ele.getElementsByTag("a");
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < as.size(); i++) {
+                        sb.append(as.get(i).text());
+                        if(i<as.size()-1){
+                            sb.append(",");
+                        }
+                    }
+                    books.setWriter(sb.toString());
+                }else if(language.size()!=0){
+                    Elements as = ele.getElementsByTag("a");
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < as.size(); i++) {
+                        sb.append(as.get(i).text());
+                        if(i<as.size()-1){
+                            sb.append(",");
+                        }
+                    }
+                    books.setLanguage(sb.toString());
+                }else if(day.size()!=0){
+                    Elements as = ele.getElementsByTag("a");
+                    books.setType(as.get(2).text());
+                }
+            }
+        /*} catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        return books;
+    }
+
     /**
      * 解析HTML返回本子信息
      * @param url JoyHentai本子地址

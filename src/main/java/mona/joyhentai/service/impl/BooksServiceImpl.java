@@ -162,7 +162,7 @@ public class BooksServiceImpl implements BooksService{
             //获取mapper接口的代理对象
             BooksMapper booksMapper = session.getMapper(BooksMapper.class);
             //设置分页Limit 0,20
-            PageHelper.startPage(1,100);
+            PageHelper.startPage(1,350);
             //调用代理对象方法
             List<Books> booksList = booksMapper.loadNotDownSuccessBooks();
             //关闭session
@@ -172,5 +172,24 @@ public class BooksServiceImpl implements BooksService{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean updateBooksDetails(List<Books> books) {
+        try {
+            //获取session
+            SqlSession session = sqlSessionFactory.openSession();
+            //获取mapper接口的代理对象
+            BooksMapper booksMapper = session.getMapper(BooksMapper.class);
+            //调用代理对象方法
+            int i = booksMapper.updateBooksDetails(books);
+            session.commit();
+            //关闭session
+            session.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
