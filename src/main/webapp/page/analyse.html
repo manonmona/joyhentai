@@ -43,6 +43,7 @@
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="analyseOne">解析</button>
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="download">单本下载</button>
         </div>
     </div>
 </div>
@@ -54,16 +55,47 @@
 
         //监听多本解析
         form.on('submit(analyseMany)', function (data) {
+            var our = $(this);
+            if(our.hasClass("layui-btn-disabled")){
+                return;
+            }
+
+            // 禁用点击
+            our.addClass("layui-btn-disabled");
             $.get('/analyseMany',{url:data.field.url},function(data){
                 console.log(data);
+                our.removeClass("layui-btn-disabled");
             });
         });
 
 
         //监听单本解析
         form.on('submit(analyseOne)', function (data) {
+            var our = $(this);
+            if(our.hasClass("layui-btn-disabled")){
+                return;
+            }
+
+            // 禁用点击
+            our.addClass("layui-btn-disabled");
             $.get('/analyseOne',{'url':data.field.url},function(data){
                 console.log(data);
+                our.removeClass("layui-btn-disabled");
+            });
+        });
+
+        //监听单本下载
+        form.on('submit(download)', function (data) {
+            var our = $(this);
+            if(our.hasClass("layui-btn-disabled")){
+                return;
+            }
+
+            // 禁用点击
+            our.addClass("layui-btn-disabled");
+            $.get('/downOne',{'url':data.field.url},function(data){
+                console.log(data);
+                our.removeClass("layui-btn-disabled");
             });
         });
 

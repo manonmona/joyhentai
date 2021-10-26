@@ -2,6 +2,7 @@ package mona.joyhentai.service;
 
 import mona.joyhentai.model.BooksPages;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,5 +17,5 @@ public interface AnalysePageService {
      * @param url
      * @return
      */
-    List<BooksPages> analysePages(String url);
+    List<BooksPages> analysePages(Integer bookId , String url) throws IOException;
 }

@@ -3,7 +3,7 @@ package mona.joyhentai.service.impl;
 import com.github.pagehelper.PageHelper;
 import mona.joyhentai.dao.BooksMapper;
 import mona.joyhentai.model.Books;
-import mona.joyhentai.model.JyResult;
+import mona.joyhentai.model.JoyResult;
 import mona.joyhentai.service.BooksService;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -156,7 +156,7 @@ public class BooksServiceImpl implements BooksService{
     }
 
     @Override
-    public JyResult getNotDownSuccessBooks(Integer page , Integer limit) {
+    public JoyResult getNotDownSuccessBooks(Integer page , Integer limit) {
         try {
             //获取session
             SqlSession session = sqlSessionFactory.openSession();

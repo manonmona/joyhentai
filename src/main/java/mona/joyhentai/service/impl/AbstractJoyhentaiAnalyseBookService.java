@@ -12,7 +12,7 @@ import java.util.Date;
  * @Author manonmona
  * @@Date 2021/10/25 19:03
  */
-public abstract class AbstractJoyhentaiAnalyseService {
+public abstract class AbstractJoyhentaiAnalyseBookService {
 
     /*public Books analyseMany(){
 
@@ -60,8 +60,7 @@ public abstract class AbstractJoyhentaiAnalyseService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(template);
         try {
             Date date = simpleDateFormat.parse(dateStr);
-            long time = date.getTime();
-            return time;
+            return date.getTime();
         } catch (ParseException e) {
             System.out.println("《"+dateStr+"》："+dateStr.length());
             e.printStackTrace();

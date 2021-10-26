@@ -6,7 +6,7 @@ import java.io.Serializable;
  * @Author manonmona
  * @@Date 2021/10/23 16:09
  */
-public class JyResult implements Serializable {
+public class JoyResult implements Serializable {
 
     /*"code": 0,
   "msg": "",

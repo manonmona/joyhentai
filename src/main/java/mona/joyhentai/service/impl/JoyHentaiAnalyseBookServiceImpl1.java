@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
  * @Author manonmona
  * @@Date 2021/10/25 18:41
  */
-public class JoyHentaiAnalyseBookServiceImpl1 extends AbstractJoyhentaiAnalyseService implements AnalyseBookService{
+public class JoyHentaiAnalyseBookServiceImpl1 extends AbstractJoyhentaiAnalyseBookService implements AnalyseBookService{
     @Override
     public List<Books> analyseMany(String url) throws IOException {
         List<Books> list = new ArrayList<>();
@@ -47,10 +46,8 @@ public class JoyHentaiAnalyseBookServiceImpl1 extends AbstractJoyhentaiAnalyseSe
 
                 list.add(books);
             }
-            return list;
         }
 
-        // 如果没有漫画 则直接返回
         return list;
     }
 

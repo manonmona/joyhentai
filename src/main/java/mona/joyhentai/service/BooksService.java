@@ -1,7 +1,7 @@
 package mona.joyhentai.service;
 
 import mona.joyhentai.model.Books;
-import mona.joyhentai.model.JyResult;
+import mona.joyhentai.model.JoyResult;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public interface BooksService {
      * 获取未下载完成的本子
      * @return
      */
-    JyResult getNotDownSuccessBooks(Integer page , Integer limit);
+    JoyResult getNotDownSuccessBooks(Integer page , Integer limit);
 
     /**
      * 修改本子详细信息
