@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:component-scan base-package="mona.joyhentai">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <aop:aspectj-autoproxy/>
+
+    <!--数据源与数据源事务管理器-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driverClass}"></property>
+        <property name="url" value="${jdbc.jdbcUrl}"></property>
+        <property name="username" value="${jdbc.userName}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="maxActive" value="10" />
+        <property name="minIdle" value="5" />
+    </bean>
+
+<!--    <bean name="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>-->
+
+    <!--MyBatis 相关-->
+    <!-- 让spring管理sqlsessionfactory 使用mybatis和spring整合包中的 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据库连接池 -->
+        <property name="dataSource" ref="dataSource" />
+        <!-- 加载mybatis的全局配置文件 -->
+        <!--<property name="configLocation" value="classpath:spring-mybatis.xml" />-->
+        <!--扩展插件数组-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor" >
+                    <property name="properties">
+                        <props>
+                            <prop key="helperDialect">mysql</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+        <!--加载mapper.xml 文件-->
+        <property name="mapperLocations" value="classpath*:mapper/*Mapper.xml"></property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="mona.joyhentai.dao" />
+    </bean>
+
+</beans>

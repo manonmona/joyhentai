@@ -105,9 +105,7 @@ public class JoyHentaiBooksAnalyse {
         // 1.获取里面每一个<a>标签，里面包含了Books的信息，<a>标签包含 "target-by-blank" 类
         Elements as = doc.getElementsByClass("target-by-blank");
         Elements details = doc.getElementsByClass("package-list-text");
-//        Elements elementsByClass = doc.getElementsByClass("target-by-blank");
-//        Elements elementsByClass = doc.getElementsByClass("target-by-blank");
-//        System.out.println(as.size()+","+details.size());
+
         for (int i =0 ; i < as.size() ; i++){
             Books books = new Books();
             //获取href

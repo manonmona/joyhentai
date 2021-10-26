@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>解析漫画</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">解析多本漫画</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" lay-verify="required" lay-reqtext="URL不能为空" placeholder="请输入URL" value="" class="layui-input">
+            <tip>填写需要解析的URL。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="analyseMany">解析</button>
+        </div>
+    </div>
+</div>
+
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">解析单本漫画</label>
+        <div class="layui-input-block">
+            <input type="text" name="url" lay-verify="required" lay-reqtext="URL不能为空" placeholder="请输入URL" value="" class="layui-input">
+            <tip>填写需要解析的URL。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="analyseOne">解析</button>
+        </div>
+    </div>
+</div>
+<script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            $ = layui.$;
+
+        //监听多本解析
+        form.on('submit(analyseMany)', function (data) {
+            $.get('/analyseMany',{url:data.field.url},function(data){
+                console.log(data);
+            });
+        });
+
+
+        //监听单本解析
+        form.on('submit(analyseOne)', function (data) {
+            $.get('/analyseOne',{'url':data.field.url},function(data){
+                console.log(data);
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

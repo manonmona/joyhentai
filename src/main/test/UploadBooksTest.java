@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -48,7 +49,8 @@ public class UploadBooksTest {
         BooksService booksService = new BooksServiceImpl();
         BooksPagesService booksPagesService = new BooksPagesServiceImpl();
 
-        List<Books> booksList = booksService.getNotDownSuccessBooks();
+//        List<Books> booksList = booksService.getNotDownSuccessBooks(1,15);
+        List<Books> booksList = new ArrayList<>();
         List<BooksPages> booksPagesList = null;
 
         //获取CPU数量
@@ -151,7 +153,8 @@ public class UploadBooksTest {
         BooksService booksService = new BooksServiceImpl();
         BooksPagesService booksPagesService = new BooksPagesServiceImpl();
 
-        List<Books> booksList = booksService.getNotDownSuccessBooks();
+//        List<Books> booksList = booksService.getNotDownSuccessBooks(1,15);
+        List<Books> booksList = new ArrayList<>();
         List<BooksPages> booksPagesList = null;
 
         String rootPath = "D:\\tmp";
