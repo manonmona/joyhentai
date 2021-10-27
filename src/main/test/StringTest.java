@@ -2,7 +2,6 @@ import mona.joyhentai.Util.JoyConfig;
 import mona.joyhentai.service.JoyConfigService;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 /**
  * @Author manonmona
@@ -15,6 +14,8 @@ public class StringTest {
 
         JoyConfigService down = new JoyConfigService();
         JoyConfig joyConfig = down.getJoyConfig();
+        joyConfig.setDir("osijdfoisdjfiosdofdoji");
+        down.saveJoyConfig(joyConfig);
         System.out.println(joyConfig);
     }
 }

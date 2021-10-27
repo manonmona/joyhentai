@@ -79,7 +79,6 @@
             // 禁用点击
             our.addClass("layui-btn-disabled");
             $.get('/analyseOne',{'url':data.field.url},function(data){
-                console.log(data);
                 our.removeClass("layui-btn-disabled");
             });
         });
@@ -94,6 +93,7 @@
             // 禁用点击
             our.addClass("layui-btn-disabled");
             $.get('/downOne',{'url':data.field.url},function(data){
+                alert(data.msg);
                 console.log(data);
                 our.removeClass("layui-btn-disabled");
             });

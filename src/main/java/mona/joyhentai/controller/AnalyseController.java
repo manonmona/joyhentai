@@ -6,6 +6,7 @@ import mona.joyhentai.model.JoyResult;
 import mona.joyhentai.service.AnalyseBookService;
 import mona.joyhentai.service.AnalysePageService;
 import mona.joyhentai.service.BooksService;
+import mona.joyhentai.service.impl.AbstractJoyhentaiDownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,9 @@ public class AnalyseController {
 
     @Autowired
     private AnalysePageService analysePageService;
+
+    @Autowired
+    private AbstractJoyhentaiDownloadService abstractJoyhentaiDownloadService;
 
     @GetMapping("/analyseMany")
     public JoyResult analyseMany(String url){
@@ -84,7 +88,9 @@ public class AnalyseController {
             joyResult.setCode(1);
             joyResult.setMsg("失败");
         }else {
-
+            abstractJoyhentaiDownloadService.threadPoolDownload(books,list);
+            joyResult.setCode(0);
+            joyResult.setMsg("开始执行");
         }
         return joyResult;
     }

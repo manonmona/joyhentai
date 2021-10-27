@@ -1,6 +1,9 @@
 package mona.joyhentai.service.impl;
 
+import mona.joyhentai.component.CommonUtils;
+import mona.joyhentai.model.Books;
 import mona.joyhentai.model.BooksPages;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,24 +11,89 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @Author manonmona
  * @@Date 2021/10/26 13:15
  */
+@Service
 public class AbstractJoyhentaiDownloadService {
 
 
+    public void threadPoolDownload(Books books , List<BooksPages> booksPagesList){
+
+        ExecutorService pool = CommonUtils.getPool();
+
+        // 去除特殊字符得到的名称
+        String dirName = replacePathChar(books.getName());
+
+        String pathName = CommonUtils.getJoyConfig().getDir()+"\\["+books.getPages()+"P]"+dirName;
+        File imagePathFile = new File(pathName);
+
+        if (!imagePathFile.exists()) {
+            imagePathFile.mkdir();
+        }
+
+        for (int i = 0; i < booksPagesList.size(); i++) {
+
+            BooksPages booksPages = booksPagesList.get(i);
+
+            File imageFile = new File(imagePathFile+"\\"+ booksPages.getName()+ booksPages.getSuffix());
+            // 如果当前文件已存在则不执行操作
+            if(imageFile.canWrite()){
+                continue;
+            }
+
+            pool.execute(() -> {
+                boolean result = false;
+                ever:do {
+                    // 重试次数
+                    for (int j = 0; j < CommonUtils.getJoyConfig().getRetry(); j++) {
+                        try {
+                            // 下载图片
+                            result = download(booksPages, pathName);
+                            if(!result){
+                                String suffix = booksPages.getSuffix();
+                                String url = booksPages.getUrl();
+                                if(suffix.equals(".png")){
+                                    booksPages.setSuffix(".jpg");
+                                    booksPages.setUrl(url.replace(".png",".jpg"));
+                                }else if(suffix.equals(".jpg")){
+                                    booksPages.setSuffix(".png");
+                                    booksPages.setUrl(url.replace(".jpg",".png"));
+                                }
+                                result = download(booksPages, pathName);
+                            }
+                        } catch (Exception e) {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String dateTime = dateFormat.format(new Date());
+                            System.out.println(e.getMessage()+"：["+books.getId()+"]"+dirName+"\t"+ booksPages.getName()+"页下载失败   ----->"+dateTime);
+
+                        }
+                        // 如果执行完，则退出
+                        if(result){
+                            break ever;
+                        }
+                    }
+                }while (CommonUtils.getJoyConfig().isRetryEver());
+
+            });
+
+        }
+        // 关闭
+//        pool.shutdown();
+    }
+
     /**
      * 下载图片
-     * @param booksPagesList
-     * @param index
-     * @param imagePathFile
+     * @param booksPages
      * @throws Exception
      */
-    protected boolean download(List<BooksPages> booksPagesList, Integer index , String imagePathFile)throws Exception {
-        BooksPages booksPages = booksPagesList.get(index);
+    protected boolean download(BooksPages booksPages , String imagePathFile) throws Exception{
         // 1.创建URL
         URL url = new URL(booksPages.getUrl());
         // 2.使用URL打开链接
@@ -39,7 +107,6 @@ public class AbstractJoyhentaiDownloadService {
         // 4.获取链接状态，200为成功，403表示访问受限，不成功则退出
         if(conn.getResponseCode()!=200 && conn.getResponseCode()!=301){
 //            System.out.println(conn.getResponseCode()+"连接退出");
-            booksPagesList.get(index).setStatus(2);
             return false;
         }
         //通过输入流获取图片数据
@@ -54,8 +121,6 @@ public class AbstractJoyhentaiDownloadService {
         outStream.write(data);
         //关闭输出流
         outStream.close();
-        //设置下载状态为完成
-        booksPagesList.get(index).setStatus(1);
         return true;
     }
 
@@ -80,5 +145,22 @@ public class AbstractJoyhentaiDownloadService {
         inStream.close();
         //把outStream里的数据写入内存
         return outStream.toByteArray();
+    }
+
+    /**
+     * windows路径不能包含：/\:*?"<>| 这些字符，需要去除
+     * @param pathName
+     * @return
+     */
+    public static String replacePathChar(String pathName){
+        return pathName.replace("/" , "")
+                .replace("\\" , "")
+                .replace(":" , "")
+                .replace("*" , "")
+                .replace("?" , "")
+                .replace("\"" , "")
+                .replace("<" , "")
+                .replace(">" , "")
+                .replace("|" , "");
     }
 }

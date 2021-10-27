@@ -17,11 +17,11 @@ public class JoyConfig {
                 '}';
     }
 
-    // 下载路径
+    // 下载保存目录
     private String dir;
     // 请求等待时间（毫秒）
     private long waitTime;
-    // 阅读等待时间（毫秒）
+    // 读取等待时间（毫秒）
     private long readTime;
     // 失败后重试的次数
     private int retry;

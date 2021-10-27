@@ -22,12 +22,6 @@
           "target": "_self"
         },
         {
-          "title": "系统设置",
-          "href": "page/setting.html",
-          "icon": "fa fa-gears",
-          "target": "_self"
-        },
-        {
           "title": "表格示例",
           "href": "page/table.html",
           "icon": "fa fa-file-text",
@@ -37,6 +31,12 @@
           "title": "解析漫画",
           "href": "page/analyse.html",
           "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "系统设置",
+          "href": "page/setting.html",
+          "icon": "fa fa-gears",
           "target": "_self"
         }
       ]
